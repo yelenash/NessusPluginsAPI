@@ -25,7 +25,7 @@ class TestPluginResource:
     @patch.object(
         PluginsService,
         "get_all",
-        lambda a, b, c: [
+        lambda a, b, c, d: [
             make_plugin("123", published_date1, "asdf", "5", ["cve1", "cve2"]),
             make_plugin("456", published_date2, "asdf", "5", ["cve1", "cve2"]),
         ],
