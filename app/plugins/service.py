@@ -8,8 +8,10 @@ PLUGINS_INDEX = "nessus"
 
 class PluginsService:
     @staticmethod
-    def get_all(sort_by=None, start=0, limit=10) -> List[Plugin]:
+    def get_all(sort_by=None, start=0, limit=10, cve_id=None) -> List[Plugin]:
         search = Search(using=current_app.elasticsearch, index=PLUGINS_INDEX)[start:limit]
+        if cve_id:
+            search = search.query("term", cvelist__keyword=cve_id)
         if sort_by:
             if sort_by == "score":
                 search = search.sort({f"cvss.{sort_by}": {"order": "desc"}})
@@ -27,14 +29,6 @@ class PluginsService:
         # TODO: somthing like firstOfDefault()
         for hit in response:
             return PluginsService._parse_single_result(hit)
-
-    @staticmethod
-    def get_by_cve(cve_id: int) -> List[Plugin]:
-        search = Search(using=current_app.elasticsearch, index=PLUGINS_INDEX) \
-            .query("term", cvelist__keyword=cve_id)
-        response = search.execute()
-        response = [PluginsService._parse_single_result(result) for result in response.hits]
-        return response
 
     @staticmethod
     def _parse_single_result(result):

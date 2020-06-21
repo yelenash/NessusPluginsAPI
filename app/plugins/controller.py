@@ -23,9 +23,7 @@ class PluginResource(Resource):
         order_by = request.args.get('orderBy')
         start = int(request.args.get('start') or "0")
         limit = int(request.args.get('limit') or "10")
-        if cve_id:
-            return PluginsService.get_by_cve(cve_id)
-        return PluginsService.get_all(order_by, start, limit)
+        return PluginsService.get_all(order_by, start, limit, cve_id)
 
 
 @api.route("/<int:pluginID>")
