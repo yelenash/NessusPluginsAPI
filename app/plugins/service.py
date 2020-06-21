@@ -26,13 +26,14 @@ class PluginsService:
         response = search.execute()
         # TODO: somthing like firstOfDefault()
         for hit in response:
-            return hit
+            return PluginsService._parse_single_result(hit)
 
     @staticmethod
     def get_by_cve(cve_id: int) -> List[Plugin]:
         search = Search(using=current_app.elasticsearch, index=PLUGINS_INDEX) \
             .query("term", cvelist__keyword=cve_id)
         response = search.execute()
+        response = [PluginsService._parse_single_result(result) for result in response.hits]
         return response
 
     @staticmethod

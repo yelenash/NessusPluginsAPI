@@ -21,7 +21,7 @@ class TestPluginService:
 
     def test_get_all_sort_by_score(self, app):
         with app.app_context():
-            results = PluginsService.get_all("pluginID")
+            results = PluginsService.get_all("score")
             for idx, result in enumerate(results):
                 if idx > 0:
                     assert result.score <= results[idx - 1].score
